@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feel the Form</title>
+    <style>
+        
+body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #e8e8e8;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        textarea,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #4caf50;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .rating label:hover,
+        .rating input:checked ~ label {
+            color: #ffcc00;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .progress-indicator {
+            width: 0;
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .confirmation-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4caf50;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <form action="https://cash2king.000webhostapp.com/process.php" method="post">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+
+        <!-- Page 1 -->
+        <div id="page1" class="page active">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="number">Number:</label>
+            <input type="tel" id="number" name="number" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <div class="navigation-buttons">
+
+                <button type="button" onclick="validateAndShowPage(2)">Next</button>
+            </div>
+        </div>
+
+        <!-- Page 2 -->
+        <div id="page2" class="page">
+
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4" cols="50" required></textarea>
+
+            <div class="navigation-buttons">
+                <button type="button" onclick="validateAndShowPage(1)">Previous</button><p>.</p>
+                <button type="button" onclick="validateAndShowPage(3)">Next</button>
+            </div>
+        </div> 
+
+        <!-- Page 3 -->
+        <div id="page3" class="page">
+<div><center>
+<img id="downloadablePhoto" src="https://i.ibb.co/KNwQ4JK/Screenshot-20240114-192721-1.jpg" height="120px">
+<h1>SCAN the QR CODE and Pay some money to help developer</h1>
+ <a href="https://i.ibb.co/KNwQ4JK/Screenshot-20240114-192721-1.jpg"download><button>Download QR CODE</button></a>
+</center></div>
+            <p>Rate the app:</p>
+            <div class="rating">
+                <input type="radio" id="star5" name="rating" value="5" >
+                <label for="star5">&#9956;</label>
+                <input type="radio" id="star4" name="rating" value="4">
+                <label for="star4">&#9956;</label>
+                <input type="radio" id="star3" name="rating" value="3">
+                <label for="star3">&#9956;</label>
+                <input type="radio" id="star2" name="rating" value="2">
+                <label for="star2">&#9956;</label>
+                <input type="radio" id="star1" name="rating" value="1">
+                <label for="star1">&#9956;</label>
+            </div>
+
+            <div class="navigation-buttons">
+                <button type="button" onclick="validateAndShowPage(2)">Previous</button><p>.</p>
+                <button type="submit" onclick="submitForm()">Submit</button>
+            </div>
+        </div>
+
+   
+    </form>
+
+    <script>
+        let currentPage = 1;
+
+        function showPage(pageNumber) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach((page, index) => {
+                page.classList.toggle('active', index + 1 === pageNumber);
+            });
+
+            updateProgressBar(pageNumber);
+            currentPage = pageNumber;
+        }
+
+        function validateAndShowPage(nextPage) {
+            const currentPageElement = document.querySelector(`#page${currentPage}`);
+            const requiredFields = currentPageElement.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#ff0000';
+                } else {
+                    field.style.borderColor = '#ccc';
+                }
+            });
+
+            if (isValid) {
+                showPage(nextPage);
+            }
+        }
+
+        function submitForm() {
+            // Additional logic for submitting the form (you can customize this part)
+            showPage('confirmationPage');
+        }
+
+        function resetForm() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.querySelector('#page1').classList.add('active');
+            updateProgressBar(1);
+            currentPage = 1;
+        }
+
+        function updateProgressBar(currentPage) {
+            const progressIndicator = document.querySelector('.progress-indicator');
+            const numberOfPages = 3;
+            const progressPercentage = (currentPage / numberOfPages) * 100;
+            progressIndicator.style.width = `${progressPercentage}%`;
+        }
+    </script>
+
+
+
+</body>
+
+</html>
